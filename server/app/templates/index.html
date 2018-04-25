@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form enctype="multipart/form-data">
+        <h3>Выберите *.wav для адаптации</h3>
+        <input type="file" name="music">
+        <h3>Выберите *.wav со стилем</h3>
+        <input type="file" name="style">
+        <p><input type="submit" value="Adapt"></p>
+    </form>
+{% endblock %}

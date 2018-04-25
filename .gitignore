@@ -1,0 +1,8 @@
+
+venv/
+
+neural-style-audio-tf/\.ipynb_checkpoints/
+
+server/__pycache__/
+
+server/app/__pycache__/
