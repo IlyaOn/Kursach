@@ -1,5 +1,5 @@
 from flask import render_template, request, flash, redirect, url_for, send_from_directory
-from app import app
+from app import app, TF_ADAPT
 from app.TF_ADAPT import calc_new_music
 from werkzeug.utils import secure_filename
 import os
@@ -11,59 +11,30 @@ def allowed_file(filename):
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
+    print(1)
+    print (send_from_directory(app.config['UPLOAD_FOLDER'], filename))
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
-@app.route('/index', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        print(request.files)
-        music = request.files['music']
-        style = request.files['style']
-        music_name = secure_filename(music.filename)
-        style_name = secure_filename(style.filename)
-        music.save(os.path.join(app.config['UPLOAD_FOLDER'], "music" ))
-        style.save(os.path.join(app.config['UPLOAD_FOLDER'], "style"))
-    return '''
-    <head>
-        <title>AAAAA</title>
-    </head>
-    <body>
-    <form enctype="multipart/form-data">
-        <h3>Выберите *.wav для адаптации</h3>
-        <input type="file" name="music">
-        <h3>Выберите *.wav со стилем</h3>
-        <input type="file" name="style">
-        <p><input type="submit" value="Adapt"></p>
-    </form>
-    </body>
-    '''
-    
+@app.route('/index', methods=['GET', 'POST'])  
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'file' not in request.files:
+        if ('style' not in request.files) or ('music' not in request.files):
             flash('No file part')
             return redirect(request.url)
-        file = request.files['file']
+        style = request.files['style']
+        music = request.files['music']
         # if user does not select file, browser also
         # submit a empty part without filename
-        if file.filename == '':
+        if style.filename == '' or music.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if style and allowed_file(style.filename) and music and allowed_file(music.filename):
+            music.save(os.path.join(app.config['UPLOAD_FOLDER'], "music.mp3"))
+            style.save(os.path.join(app.config['UPLOAD_FOLDER'], "style.mp3"))
             return redirect(url_for('uploaded_file',
-                                    filename=filename))
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
+                                    filename="style.mp3"))
+    return render_template("index.html")
     

@@ -4,9 +4,9 @@ import os
 from IPython.display import Audio, display
 import numpy as np
 
-CONTENT_FILENAME = "inputs/imperial.mp3"
-STYLE_FILENAME = "inputs/usa.mp3"
-OUTPUT_FILENAME = 'outputs/out.wav'
+CONTENT_FILENAME = "uploads/music.mp3"
+STYLE_FILENAME = "uploads/style.mp3"
+OUTPUT_FILENAME = 'uploads/out.wav'
 
 def calc_new_music():
     N_FFT = 2048
@@ -65,7 +65,7 @@ def calc_new_music():
     with tf.Graph().as_default():
 
         # Build graph with variable input
-    #     x = tf.Variable(np.zeros([1,1,N_SAMPLES,N_CHANNELS], dtype=np.float32), name="x")
+        #x = tf.Variable(np.zeros([1,1,N_SAMPLES,N_CHANNELS], dtype=np.float32), name="x")
         x = tf.Variable(np.random.randn(1,1,N_SAMPLES,N_CHANNELS).astype(np.float32)*1e-3, name="x")
 
         kernel_tf = tf.constant(kernel, name="kernel", dtype='float32')
