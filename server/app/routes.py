@@ -34,7 +34,8 @@ def upload_file():
         if style and allowed_file(style.filename) and music and allowed_file(music.filename):
             music.save(os.path.join(app.config['UPLOAD_FOLDER'], "music.mp3"))
             style.save(os.path.join(app.config['UPLOAD_FOLDER'], "style.mp3"))
+            calc_new_music()
             return redirect(url_for('uploaded_file',
-                                    filename="style.mp3"))
+                                    filename="out.wav"))
     return render_template("index.html")
     
